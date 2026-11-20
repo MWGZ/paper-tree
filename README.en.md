@@ -1,6 +1,7 @@
 # PaperTree
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![CI](https://github.com/MWGZ/paper-tree/actions/workflows/ci.yml/badge.svg)](https://github.com/MWGZ/paper-tree/actions/workflows/ci.yml)
 [![Node.js 24+](https://img.shields.io/badge/Node.js-24%2B-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
 
 [简体中文](README.md) · English
@@ -26,14 +27,14 @@ Ask a question, get a researched answer with citations, then select any sentence
 Requirements: Node.js 24+.
 
 ```bash
-# from the cloned/downloaded repository root
+git clone https://github.com/MWGZ/paper-tree.git
 cd paper-tree
 npm ci
 npm run desktop      # Electron window
 # or: npm run start  # web dev server at http://127.0.0.1:4317
 ```
 
-A prebuilt Windows installer will be available on the repository's **Releases** page when published. It does not require Node.js.
+A prebuilt Windows installer will be available on the repository's **[Releases](https://github.com/MWGZ/paper-tree/releases)** page when published. It does not require Node.js.
 
 ## API key
 

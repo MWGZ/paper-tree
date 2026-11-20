@@ -1,6 +1,7 @@
 # PaperTree
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![CI](https://github.com/MWGZ/paper-tree/actions/workflows/ci.yml/badge.svg)](https://github.com/MWGZ/paper-tree/actions/workflows/ci.yml)
 [![Node.js 24+](https://img.shields.io/badge/Node.js-24%2B-339933?logo=node.js&logoColor=white)](https://nodejs.org/)
 [![Local-first](https://img.shields.io/badge/local--first-no%20telemetry-4f63e8)](#privacy)
 
@@ -29,7 +30,7 @@ More screenshots: [maximized note](app/screenshot-note-max.png) · [minimal anno
 
 ### Prebuilt Windows installer
 
-When a GitHub Release is published, download `PaperTree-Setup-*.exe` from the repository's **Releases** page. The installer is self-contained and does not require Node.js.
+When a GitHub Release is published, download `PaperTree-Setup-*.exe` from the repository's **[Releases](https://github.com/MWGZ/paper-tree/releases)** page. The installer is self-contained and does not require Node.js.
 
 > The installer is not code-signed yet. Windows SmartScreen may show “Unknown publisher”; choose **More info → Run anyway**. Code signing is planned.
 
@@ -38,7 +39,7 @@ When a GitHub Release is published, download `PaperTree-Setup-*.exe` from the re
 Requirements: **Node.js 24+** and npm.
 
 ```powershell
-# from the cloned/downloaded repository root
+git clone https://github.com/MWGZ/paper-tree.git
 cd paper-tree
 npm ci
 npm run desktop

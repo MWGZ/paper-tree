@@ -7,6 +7,14 @@
   "author": "PaperTree contributors",
   "license": "MIT",
   "description": "Open-source, local-first paper-reading workspace with annotation notes, a question tree, and traceable DeepSeek research.",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MWGZ/paper-tree.git"
+  },
+  "homepage": "https://github.com/MWGZ/paper-tree#readme",
+  "bugs": {
+    "url": "https://github.com/MWGZ/paper-tree/issues"
+  },
   "keywords": [
     "paper-reading",
     "annotation",
