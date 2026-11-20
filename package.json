@@ -37,8 +37,8 @@
     "dist": "electron-builder --win nsis"
   },
   "devDependencies": {
-    "electron": "^43.4.0",
-    "electron-builder": "^26.15.3"
+    "electron": "^45.3.3",
+    "electron-builder": "^26.18.0"
   },
   "build": {
     "appId": "com.papertree.app",
