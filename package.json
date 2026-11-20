@@ -1,0 +1,77 @@
+{
+  "name": "paper-tree",
+  "version": "0.3.3",
+  "private": false,
+  "type": "module",
+  "main": "desktop/main.cjs",
+  "author": "PaperTree contributors",
+  "license": "MIT",
+  "description": "Open-source, local-first paper-reading workspace with annotation notes, a question tree, and traceable DeepSeek research.",
+  "keywords": [
+    "paper-reading",
+    "annotation",
+    "research",
+    "deepseek",
+    "electron",
+    "local-first",
+    "knowledge-tree"
+  ],
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "start": "node app/server.mjs",
+    "dev": "node --watch app/server.mjs",
+    "desktop": "electron .",
+    "check": "node scripts/check.mjs",
+    "test": "node scripts/check.mjs",
+    "pack": "electron-builder --win --dir",
+    "dist": "electron-builder --win nsis"
+  },
+  "devDependencies": {
+    "electron": "^43.4.0",
+    "electron-builder": "^26.15.3"
+  },
+  "build": {
+    "appId": "com.papertree.app",
+    "productName": "PaperTree",
+    "asar": false,
+    "electronDist": "node_modules/electron/dist",
+    "npmRebuild": false,
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "desktop/**/*",
+      "app/**/*",
+      "package.json",
+      "!app/data/**",
+      "!app/.env",
+      "!app/screenshot*",
+      "!app/README.md"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "desktop/icon.ico",
+      "requestedExecutionLevel": "asInvoker"
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "PaperTree",
+      "deleteAppDataOnUninstall": false,
+      "artifactName": "PaperTree-Setup-${version}.${ext}"
+    }
+  }
+}

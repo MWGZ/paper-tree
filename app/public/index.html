@@ -1,0 +1,187 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PaperTree · 对话树论文精读</title>
+<link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">
+    <div class="logo">P</div>
+    <div>
+      <div class="brand-name">PaperTree</div>
+      <div class="brand-sub">对话树论文精读</div>
+    </div>
+  </div>
+  <div class="session">
+    <span class="session-label">会话</span>
+    <strong id="sessionTitle">加载中…</strong>
+    <span class="paper-chip" id="paperChip">未设置论文</span>
+    <span class="mode-badge" id="modeBadge">…</span>
+  </div>
+  <div class="top-actions">
+    <button class="btn" id="settingsBtn" title="论文与 API 设置">设置</button>
+    <button class="btn primary" id="newRootBtn">＋ 新树根</button>
+    <div class="avatar">我</div>
+  </div>
+</header>
+
+<main class="workspace">
+  <section class="map-pane">
+    <div class="pane-head">
+      <div class="pane-title">会话地图 <span class="badge" id="nodeCount">0 个节点</span></div>
+      <div class="map-tools">
+        <button class="icon-btn" id="fitBtn" title="适应画布">适应</button>
+        <button class="icon-btn" id="collapseBtn" title="折叠非当前路径的分支">折叠分支</button>
+        <button class="icon-btn" id="focusBtn" title="只突出当前路径">聚焦路径</button>
+        <button class="icon-btn" id="searchBtn" title="搜索节点">⌕ 搜索</button>
+      </div>
+    </div>
+    <div class="map-viewport" id="viewport">
+      <div class="map-canvas" id="canvas">
+        <svg id="edges" width="1600" height="1000"></svg>
+        <div id="rootLabels"></div>
+        <div id="nodes"></div>
+      </div>
+      <div class="empty-map" id="emptyMap" hidden>
+        <div class="empty-map-card">
+          <div class="empty-map-icon">🌱</div>
+          <h2>从第一个问题开始</h2>
+          <p>在右侧设置里粘贴论文文本，然后问一个具体的问题。<br>每个回答里的句子都可以继续追问，长成一棵树。</p>
+          <button class="btn primary" id="emptySettingsBtn">设置论文</button>
+        </div>
+      </div>
+      <div class="map-hint" id="mapHint">拖拽平移 · 滚轮缩放 · 点击节点阅读</div>
+      <div class="map-legend">
+        <span><i class="line"></i>继续追问</span>
+        <span><i class="line dashed"></i>就句子追问</span>
+        <span><i class="dot"></i>已理解</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="reader-pane" id="readerPane">
+    <div class="reader-top">
+      <nav class="breadcrumb" id="breadcrumb"></nav>
+      <span class="depth-pill" id="depthPill">—</span>
+    </div>
+    <div class="reader-scroll" id="readerScroll">
+      <div class="reader-content" id="readerContent"></div>
+    </div>
+    <div class="composer" id="composer">
+      <div class="quote-chip" id="quoteChip" hidden>
+        <span class="quote-mark">“</span>
+        <span id="quoteText"></span>
+        <button id="clearQuote" title="清除引文">×</button>
+      </div>
+      <div class="composer-box">
+        <textarea id="input" rows="1" placeholder="继续追问…（Enter 发送，Shift+Enter 换行）"></textarea>
+        <button class="send-btn" id="sendBtn" title="发送" disabled>↑</button>
+      </div>
+      <div class="composer-foot">
+        <span class="hint"><kbd>Esc</kbd> 返回上级 · 选中回答里的句子可「就这句追问」</span>
+        <span class="composer-right">
+          <select id="askMode" class="mini-select" title="检索模式">
+            <option value="academic">学术优先</option>
+            <option value="web">网页优先</option>
+          </select>
+          <button class="link-btn" id="understoodBtn">✓ 已理解，收起并返回</button>
+        </span>
+      </div>
+    </div>
+  </section>
+</main>
+
+<div class="drawer-backdrop" id="drawerBackdrop" hidden></div>
+<aside class="drawer" id="sourceDrawer" aria-hidden="true">
+  <div class="drawer-head">
+    <div>
+      <div class="drawer-kicker">来源详情</div>
+      <h3 id="drawerTitle">—</h3>
+    </div>
+    <button class="icon-btn" id="closeDrawer" title="关闭">✕</button>
+  </div>
+  <div class="drawer-body" id="drawerBody"></div>
+</aside>
+
+<div class="modal-backdrop" id="settingsModal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="settingsTitle">
+    <div class="modal-head">
+      <div>
+        <div class="drawer-kicker">配置</div>
+        <h2 id="settingsTitle">论文与 API</h2>
+      </div>
+      <button class="icon-btn" id="closeSettings" title="关闭">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="api-status" id="apiStatus"></div>
+      <label class="field">
+        <span>会话名称</span>
+        <input id="sessionTitleInput" type="text" maxlength="120" placeholder="例如：Transformer 论文精读">
+      </label>
+      <label class="field">
+        <span>论文标题</span>
+        <input id="paperTitleInput" type="text" maxlength="240" placeholder="例如：Attention Is All You Need">
+      </label>
+      <label class="field">
+        <span>论文原文 / 摘要 <em>（P0 先粘贴文本，PDF 在下一步）</em></span>
+        <textarea id="paperTextInput" rows="10" placeholder="把论文摘要、引言或关键章节粘到这里。模型会把它当作论文原文，与外部检索结果区分。"></textarea>
+      </label>
+      <label class="field">
+        <span>默认检索模式</span>
+        <select id="modeInput">
+          <option value="academic">学术优先（推荐）</option>
+          <option value="web">网页优先</option>
+        </select>
+      </label>
+      <div class="field" id="desktopKeyField" hidden>
+        <span>DeepSeek API Key <em>（加密保存在本机）</em></span>
+        <input id="desktopKeyInput" type="password" autocomplete="off" placeholder="sk-...">
+        <div class="modal-note">保存后会自动重启本地检索服务。Key 只保存在这台电脑，不会上传。</div>
+        <div class="modal-actions" style="margin-top:2px">
+          <button class="btn primary" id="saveDesktopKey">保存 Key</button>
+          <button class="btn" id="clearDesktopKey">清除 Key</button>
+          <button class="btn" id="openDataDir">打开数据目录</button>
+        </div>
+      </div>
+      <div class="modal-note" id="keyHelp"></div>
+      <div class="modal-actions">
+        <button class="btn" id="demoBtn">载入示例树</button>
+        <button class="btn danger" id="resetBtn">清空所有节点</button>
+        <span class="spacer"></span>
+        <button class="btn" id="cancelSettings">取消</button>
+        <button class="btn primary" id="saveSettings">保存</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal-backdrop" id="newRootModal" hidden>
+  <div class="modal small" role="dialog" aria-modal="true">
+    <div class="modal-head">
+      <div>
+        <div class="drawer-kicker">新树根</div>
+        <h2>问一个相关度没那么高的问题</h2>
+      </div>
+      <button class="icon-btn" id="closeNewRoot" title="关闭">✕</button>
+    </div>
+    <div class="modal-body">
+      <label class="field">
+        <span>问题</span>
+        <textarea id="newRootInput" rows="4" placeholder="例如：位置编码为什么用正弦函数？"></textarea>
+      </label>
+      <div class="modal-actions">
+        <span class="spacer"></span>
+        <button class="btn" id="cancelNewRoot">取消</button>
+        <button class="btn primary" id="submitNewRoot">开始研究</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast"></div>
+<script type="module" src="/app.js"></script>
+</body>
+</html>

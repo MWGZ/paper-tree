@@ -1,0 +1,23 @@
+# Secrets and local configuration
+.env
+.env.*
+!**/.env.example
+app/.env
+
+# Local app data and logs
+app/data/
+*.log
+
+# Dependencies and build output
+node_modules/
+dist/
+.npm-cache/
+builder-debug.yml
+PaperTree-Setup-*.exe
+*.blockmap
+
+# Editor / OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
